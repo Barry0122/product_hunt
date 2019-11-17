@@ -37,6 +37,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+		
 	
 	</script>
 
@@ -44,7 +45,7 @@
 
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	  <a class="navbar-brand" href="#">
+	  <a class="navbar-brand" href="{% url '主頁面' %}">
 	  <img src=" {% static "logo.png" %} " height=50>
 	  炫泡貓
 	  </a>
@@ -64,12 +65,29 @@
 	          <a class="dropdown-item" href="#">查看送養清單</a>
 	        </div>
 	      </li>
-	      <li class="nav-item " >
-	        <a class="nav-link" href="#">Log in</a>
-	      </li>
-	      <li class="nav-item ">
-	        <a class="nav-link " href=" {% url '註冊頁面' %} ">Sign up</a>
-	      </li>
+	      {% if user.is_authenticated %}
+	      		<li class="nav-item " >
+	        	 <a class="nav-link" href="Javascript:{document.getElementById('退出').submit()}" > 退出 </a>
+	        	 <!--   因為"退出"這個事件要post 我們要給他一個表單，但是要把表單給隱藏起來 => 也就是說按下"退出" 其實是送出一個隱藏表單出去 ，利用JS 去get_ID為'退出'的元素submit()他 ，submit"退出"後 會執行下面的action
+				 也就是 {% url '退出頁面' %} 將他導入到 account的urls.py 為name的動作 ，對應到的動作是views.logout
+				 所以會執行account的views.py裡面的logout_funtion
+	        	 -->
+	      		</li>
+	      		<form id = '退出' method="POST" action="{% url '退出頁面' %}" align='center'>  
+	      			<!-- ...使用post方式 跳轉道action的裡面 ... -->
+					{% csrf_token %} <!--防止csrf攻擊 打這行python就可以幫我們避免!-->
+					<input class='btn btn-primary' type="hidden">
+					<!-- 我們用type為hidden把表單隱藏起來  -->
+				</form>
+	      {% else %}
+	      		<li class="nav-item " >
+	        	 <a class="nav-link" href=" {% url '登入頁面' %} ">Log in</a>
+	      		</li>
+	      		<li class="nav-item ">
+	       		 <a class="nav-link " href=" {% url '註冊頁面' %} ">Sign up</a>
+	      		</li>
+	      {% endif %}
+	      
 	      
 	    </ul>
 	    

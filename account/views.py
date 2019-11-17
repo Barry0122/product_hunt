@@ -3,6 +3,7 @@
 
 from django.shortcuts import render , redirect
 from django.contrib.auth.models import User #導入django內有的用戶註冊模板
+from django.contrib import auth
 # Create your views here.
 
 def signup(request):
@@ -12,12 +13,13 @@ def signup(request):
 		user_account = request.POST['會員帳號']
 		user_pwd = request.POST['會員密碼']
 		user_check_pwd = request.POST['會員確認密碼']
+		#下面這邊還不嚴謹 之後再寫
 		try:
 			User.objects.get(username = user_account)
 			return render(request, 'signup.html', {'帳號錯誤' : '該帳號已存在'})
 		except User.DoesNotExist:
 			if user_pwd == user_check_pwd:
-				User.objects.create(username = user_account, password = user_pwd)
+				User.objects.create_user(username = user_account, password = user_pwd)
 				return redirect('主頁面')
 			else:
 				return render(request, 'signup.html', {'密碼錯誤' : '輸入密碼不一致'})
@@ -33,4 +35,26 @@ def signup(request):
 	我們就要判斷密碼是否相符，相符 => 我們就用User的api =>  User.objects.create(username = user_account, password = user_pwd)
 	將帳號設置為user_account密碼設置為user_pwd 
 	User.objects.create(username = 帳號, password = 密碼)
+
+	這邊注意要用create_user 不能用create ，用create雖然創的出來但是密碼永遠不會對
 """
+
+def  login(request):
+	if request.method == 'GET' :
+		return render(request, 'login.html') #如果呼叫login_function會跳轉到login.html裏頭
+	elif request.method == 'POST' :
+		user_account = request.POST['會員帳號']
+		user_pwd = request.POST['會員密碼']
+		user = auth.authenticate(username = user_account, password = user_pwd)
+		if user is None:
+			return render(request, 'login.html',{'密碼錯誤' : '帳號或密碼有誤'})
+		else:
+			auth.login(request, user)
+			return redirect('主頁面')
+
+def  logout(request):
+	if request.method == 'POST' :
+		auth.logout(request)
+		return redirect('主頁面')
+
+

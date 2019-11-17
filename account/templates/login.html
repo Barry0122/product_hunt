@@ -1,0 +1,30 @@
+{% extends "theme.html" %}  
+
+
+{% block content %}
+	<h2 align='center'> 登入炫炮貓會員 </h2>
+
+	<form method="POST" action="{% url '登入頁面' %}" align='center'>  <!-- ...使用post方式 跳轉道action的裡面 ... -->
+		{% csrf_token %} <!--防止csrf攻擊 打這行python就可以幫我們避免!-->
+			<br>
+		帳號:
+			<br>
+		<input type="text" name="會員帳號">
+			<br>
+			<br>
+		密碼:
+			<br>
+		<input type="password" name="會員密碼">
+			<br>
+			<br>
+			{{密碼錯誤}}
+			<br>
+			<br>
+			<br>
+		<input class='btn btn-primary' type="submit" value="登入">
+			<br>
+	</form>
+
+
+{% endblock content %}
+
