@@ -16,11 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import products.views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
+    
     path('admin/', admin.site.urls),
     path('', products.views.product_list , name = '主頁面'),  #呼叫products_APP 裡面的views_PY 的product_list_FUNCTION
     path('account/', include('account.urls')), #不管account後面是誰 一濾油account裡面的urls負責
     #所以只要網址在account/底下 會啟動account.urls裡面的東西
-]
+    path('products/', include('products.urls')), 
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

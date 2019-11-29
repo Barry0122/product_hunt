@@ -58,3 +58,5 @@ def  logout(request):
 		return redirect('主頁面')
 
 
+
+
