@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required #登入權限監視
 from .models import Animal
 from django.utils import timezone #django抓時間的東西
+from django.utils import timezone as datetime 
 from django.core.files.storage import FileSystemStorage #可以把上船的檔案拿到一個地方存起來
 #以下兩個import為json要用的
 import json, os, sys
@@ -51,7 +52,7 @@ def publish(request):
 			DBanimal.animal_remark = animal_remark
 			DBanimal.animal_image = animal_image
 
-			DBanimal.pub_data = timezone.datetime.now()
+			DBanimal.pub_data = timezone.datetime.now()     #datetime好像要拿掉比較好!?!?!!?
 			DBanimal.animal_owner = request.user
 
 			DBanimal.save()
@@ -63,23 +64,29 @@ def publish(request):
 def update_Json_To_DB(request):
 	#以下為json塞入DB
 	animal =  Animal.objects
-	url = "http://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL"
+	url = "http://163.29.157.32:8080/dataset/6a3e862a-e1cb-4e44-b989-d35609559463/resource/f4a75ba9-7721-4363-884d-c3820b0b917c/download/363b8cdd1d2742768af9e47ae54a09c2.json"
 	data = requests.get(url).json()
+	
 	count = 0;
 	for item in data:
-		if count == 10 :
+		DBanimal = Animal() #需要import
+		if count  ==5 :
 			break
-		animal_id = item['animal_id']    #=> 我的ID要用我們自己的? 還是用opendata的?
-		#animal_variety = item['animal_id'] => opendata沒有
-
-
-		animal_sex = item['animal_sex']
-		animal_old = item['animal_id']
-		animal_size = item['animal_bodytype']
-		animal_color = item['animal_colour']
-		animal_from = item['shelter_name']
-		animal_health = item['animal_id']
-		#animal_remark = item['animal_id'] =>opendata沒有
-		animal_image = item['album_file']
+		DBanimal.animal_id = count    #=> 我的ID要用我們自己的? 還是用opendata的?
+		DBanimal.animal_variety = item['Variety']
+		DBanimal.animal_sex = item['Sex']
+		DBanimal.animal_old = item['Age']
+		DBanimal.animal_size = item['Build']
+		DBanimal.animal_color = item['HairType']
+		DBanimal.animal_from = item['Resettlement']
+		DBanimal.animal_health = item['IsSterilization']
+		DBanimal.animal_remark = item['Note'] 
+		DBanimal.animal_image = item['ImageName']
+		DBanimal.pub_data = timezone.now()
+		DBanimal.animal_owner = request.user
+		test = item['AcceptNum']
+		DBanimal.save()
 		count+=1
+		print(test)
+	return render(request, 'update.html',{'message' :  "成功"} )
 
