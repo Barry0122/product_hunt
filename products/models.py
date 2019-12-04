@@ -14,7 +14,7 @@ class Animal(models.Model):
 	animal_health = models.CharField(max_length = 50)
 	
 	animal_remark = models.TextField(max_length = 10)
-	animal_image = models.ImageField(default = 'default_img.png', upload_to = 'images/')
+	animal_image = models.ImageField(upload_to = 'images/')
 
 	animal_owner = models.ForeignKey(User, on_delete = models.CASCADE)
 

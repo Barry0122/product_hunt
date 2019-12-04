@@ -1,0 +1,8 @@
+
+#wrap{
+    display: flex;
+    justify-content: flex-start;
+}
+ h1 a {
+        color: #FCA205;
+ }

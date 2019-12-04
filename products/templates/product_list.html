@@ -3,5 +3,30 @@
 
 {% block content %}
 動物放這裡
+<br>
+{{查詢錯誤}}
+<br>
+
+{% for  animal in animal.all %}
+<table style="border:8px #FFD382 groove;" cellpadding="2" border='0' width=300px height=250px>
+	<tr><td><img width = "150" height="150" src="{{ animal.animal_image.url}} " alt="">	</td></tr>
+	<tr><td>品種: {{animal.animal_variety}} </td></tr>
+	<tr><td>性別: {{animal.animal_sex}} </td></tr>
+	<tr><td>所在地: {{animal.animal_from}}</td></tr>
+</table>
+	
+{% endfor %}
+<!---
+<table style="border:8px #FFD382 groove;" cellpadding="2" border='0' width=300px height=250px>
+	<tr><td><img src="..." alt="..." class="img-thumbnail"></td></tr>
+	<tr><td>品種: {{show_list.Animal_id}} </td></tr>
+	<tr><td>性別: {{show_list}} </td></tr>
+	<tr><td>所在地: </td></tr>
+
+</table>
+--->
+
+
+
 {% endblock content %}
 

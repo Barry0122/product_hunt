@@ -3,7 +3,7 @@
 
 {% block content %}
 
-	<form method="POST" action="{% url '上傳動物頁面' %}" align='center'>  <!-- ...使用post方式 跳轉道action的裡面 ... -->
+	<form method="POST" action="{% url '上傳動物頁面' %}" align='center' enctype="multipart/form-data">  <!-- ...使用post方式 跳轉道action的裡面 ... -->
 		{% csrf_token %} <!--防止csrf攻擊 打這行python就可以幫我們避免!-->
 			<br>
 		編號:
