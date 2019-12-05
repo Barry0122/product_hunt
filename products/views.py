@@ -70,9 +70,9 @@ def update_Json_To_DB(request):
 	count = 0;
 	for item in data:
 		DBanimal = Animal() #需要import
-		if count  ==5 :
+		if count  ==10 :
 			break
-		DBanimal.animal_id = count    #=> 我的ID要用我們自己的? 還是用opendata的?
+		DBanimal.animal_id = count +1   #=> 我的ID要用我們自己的? 還是用opendata的?
 		DBanimal.animal_variety = item['Variety']
 		DBanimal.animal_sex = item['Sex']
 		DBanimal.animal_old = item['Age']
@@ -85,8 +85,16 @@ def update_Json_To_DB(request):
 		DBanimal.pub_data = timezone.now()
 		DBanimal.animal_owner = request.user
 		test = item['AcceptNum']
-		DBanimal.save()
+		if check_id(DBanimal.animal_id):
+			DBanimal.save()
 		count+=1
-		print(test)
 	return render(request, 'update.html',{'message' :  "成功"} )
 
+def check_id(input_id):
+	try:
+		get_id =  Animal.objects.get(input_id)
+		print(input_id,"可以存!")
+		return False #有get的到代表已經有資料了
+	except:
+		print(input_id,"已經有了")
+		return True
